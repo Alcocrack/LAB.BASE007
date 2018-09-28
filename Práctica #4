@@ -102,19 +102,19 @@ delete from Estado where iIdcuidad = 15
 
 UPDATE Autobus
 SET tCantPasajero=55
-WHERE iIdAutobus=15;
+WHERE iIdAutobus=13;
 
 UPDATE Pasajero
 SET tEdadPasajero=24
-WHERE iIdPasajero=15;
+WHERE iIdPasajero=14;
 
 UPDATE Chofer
 SET tEdadChofer=29
-WHERE iIdChofer=15;
+WHERE iIdChofer=14;
 
 UPDATE RutaM
 SET tTiempoEstimado=20
-WHERE iIdRuta=15;
+WHERE iIdRuta=14;
 
 UPDATE Autobus
 SET tCantPasajero=60
