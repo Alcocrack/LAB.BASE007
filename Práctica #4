@@ -4,7 +4,7 @@ Select * from Autobus
 Select * from Chofer
 Select * from Estado
 Select * from Pasajero
-Select * from Ruta
+Select * from RutaM
 
 INSERT INTO Autobus (iIdAutobus, vMarca, iModelo, tCantPasajero, vPlacas)
 VALUES (1, 'Mercedes benz', 2014, 50, 'SD-G32-234');
