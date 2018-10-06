@@ -1,0 +1,216 @@
+use SendaBeta
+
+Select * from Autobus
+Select * from Chofer
+Select * from Estado
+Select * from Pasajero
+Select * from RutaM
+
+select (p.vNombrePasajero + ' ' + p.ApllPat+ ' ' +p.ApllMat) as NombreCompleto
+from Pasajero as p
+
+select (c.vNomChofer + ' ' + c.ApllPat+ ' ' +c.ApllMat) as NombreCChofer
+from Chofer as c
+
+select Max(p.tEdadPasajero) as MayorP
+from Pasajero as p
+
+select Max(c.tEdadChofer) as MayorC
+from Chofer as c
+
+select Min(a.tCantPasajero) as MenorCap
+from Autobus as a
+
+
+
+select r.iIdCdOrigen, r.iIdCdDestino,
+
+	   e.iIdViaje
+
+ from RutaM as r, Viaje as e
+
+
+select c.iIdChofer,
+
+	   a.iIdAutobus
+
+ from Chofer as c
+
+ inner join Autobus as a
+
+ on a.iIdAutobus = c.iIdChofer
+
+
+select v.iIdViaje,
+
+	   r.iIdRuta
+
+ from Viaje as v
+
+ left join RutaM as r
+
+ on v.iIdViaje = r.iIdRuta
+
+
+
+select v.iIdViaje,
+
+	   r.iIdRuta
+
+ from Viaje as v
+
+ right join RutaM as r
+
+ on v.iIdViaje = r.iIdRuta
+
+
+
+
+
+select (c.vNomChofer + ' ' + c.ApllPatC+ ' ' +c.ApllMatC) as NombreCompleto,
+
+	   c.iIdChofer
+
+ from Chofer as c
+
+ left join ChoferAutobus as d on d.iIdChofer = c.iIdChofer
+
+ where d.iIdChofer = 4
+
+
+select iIdChofer ,tEdadChofer
+
+ from Chofer
+
+ where tEdadChofer> 20
+
+
+select iIdAutobus , tCantPasajero
+
+ from Autobus
+
+ where tCantPasajero> 50
+
+
+select (vNombrePasajero + ' ' + ApllPat+ ' ' +ApllMat) as NombreCompleto, tEdadPasajero
+
+ from Pasajero
+
+ where tEdadPasajero > 25
+
+
+ select (vMarca) as Camión, tCantPasajero
+
+ from Autobus
+
+ where tCantPasajero> 50
+
+
+select max(tEdadChofer) as 'Chofer más años'
+
+from Chofer
+
+
+select max(tCantPasajero) as 'Autobus con mas capacidad'
+
+from Autobus
+
+
+select COUNT(c.iIdChofer) as 'Chofer', d.iIdAutobus
+
+FROM Chofer as c
+
+inner join Autobus as d on d.iIdAutobus = c.iIdChofer
+
+group by d.iIdAutobus
+
+
+
+ select count(c.iIdChofer) as 'Chofer', s.iIdAutobus
+
+  from ChoferAutobus as v
+
+  inner join Chofer as c on c.iIdChofer = v.iIdChofer
+
+  inner join ChoferAutobus as sv on sv.iIdAutobus= v.iIdAutobus
+
+  inner join Autobus as s on s.iIdAutobus = sv.iIdAutobus
+
+group by s.iIdAutobus
+
+
+
+select COUNT(iIdPasajero) as 'numero pasajeros', vNombrePasajero
+
+FROM Pasajero
+
+group by vNombrePasajero
+
+having count(iIdPasajero) >= 0
+
+order by count(iIdPasajero) asc
+
+
+
+
+ select count(c.iIdChofer) as 'numero de chofer', ca.iIdAutobus
+
+  from ChoferAutobus as ca
+
+  inner join Chofer as c on c.iIdChofer = ca.iIdChofer
+
+group by ca.iIdAutobus
+
+
+select count(c.iIdPasajero) as 'numero de pasjero', ca.iIdBoleto
+
+  from PasajeroBoleto as ca
+
+  inner join Pasajero as c on c.iIdPasajero= ca.iIdPasajero
+
+group by ca.iIdBoleto
+
+
+select COUNT(e.iIdRuta) as 'ruta', d.iIdViaje
+
+FROM RutaM as e
+
+inner join Viaje as d on d.iIdRuta = e.iIdRuta
+
+group by d.iIdViaje
+
+
+
+
+select iIdChofer, vNomChofer, apllPatC, apllMatC, vnomCompC, tEdadChofer
+
+into #chofer
+
+from Chofer
+
+
+drop table Chofer
+
+create table Chofer(
+
+	iIdChofer int NOT NULL,
+
+	vNomChofer varchar(50) NULL,
+
+	apllPatC varchar(50) NULL,
+
+	apllMatC varchar(50) NULL,
+
+	nomCompC  AS (vNomChofer+' '+apllPatC+' '+apllMatC),
+
+	tEdadChofer int NULL)
+
+
+
+insert into Chofer(iIdChofer, vNomChofer, apllPatC, apllMatC, vnomCompC, tEdadChofer)
+
+select iIdChofer, vNomChofer, apllPatC, apllMatC, vnomCompC, tEdadChofer
+
+from #chofer
+
+select * from Chofer
