@@ -1,0 +1,91 @@
+use SendaBeta
+-- -----------------------------Sub-Consultas-----------------------
+select *
+from
+	(select tEdadChofer, count (tEdadChofer) as 'MismaEdad'
+		from Chofer
+		group by tEdadChofer) as NC
+where NC.MismaEdad >0
+
+select*
+from 
+	( select tEdadPasajero, (
+					select COUNT(tEdadPasajero)
+					from Pasajero as E
+					where E.tEdadPasajero = Pasajero.tEdadPasajero
+					) as 'ConMismaEdad'
+	from Pasajero) as NC
+where NC.tEdadPasajero >1
+
+select *
+from
+	(select tCantPasajero, count (tCantPasajero) as 'MismaCapacidad'
+		from Autobus
+		group by tCantPasajero) as NC
+where NC.MismaCapacidad >0
+
+
+-- -----------------------------Whit-----------------------
+with Edades as (
+select tEdadChofer, count(tEdadChofer) as [Cantidad]
+	from Chofer
+	group by tEdadChofer
+	)
+select *
+from Edades
+where Edades.Cantidad >0
+
+
+-- -------------------------VISTAS---------------------------- 
+create view SalidasOrigen as(
+Select e.iIdcuidad as [Ciudad], 
+	Count(v.iIdCdOrigen) as [Salidas]
+from RutaM as v
+left join  Estado e on v.iIdCdOrigen = e.iIdcuidad
+where v.iIdCdOrigen = e.iIdcuidad
+group by e.iIdcuidad)
+Select * from SalidasOrigen
+
+create view Destinos as(
+Select e.iIdcuidad as [Ciudad], 
+	Count(v.iIdCdDestino) as [Llegadas]
+from RutaM as v
+left join  Estado e on v.iIdCdDestino = e.iIdcuidad
+where v.iIdCdDestino = e.iIdcuidad
+group by e.iIdcuidad)
+Select * from Destinos
+
+create view ChoferBus as(
+Select e.vNomChofer as [Nombre], 
+	Count(v.iIdAutobus) as [Autobus]
+from Autobus as v
+left join Chofer e on v.iIdAutobus = e.iIdChofer
+where v.iIdAutobus= e.iIdChofer
+group by e.vNomChofer)
+Select * from ChoferBus
+
+create view ReporteVenta as(
+select e.Nombre + ' ' + e.Apellido Paterno + ' ' + e.Apellido Materno as [Nombre], 
+	Count(v.Id) as [Total de Venta]
+from VENTA as v
+left join Empleado e on v.IdEmpleadoVenta = e.Id
+where MONTH(v.FechaHora) = MONTH(GETDATE())
+group by e.Nombre + ' ' + e.Apellido Paterno + ' ' + e.Apellido Materno
+)
+Select * from ReporteVenta
+
+create view Viaje as(
+Select e.iIdRuta as [Ruta], 
+	Count(v.iIdViaje) as [Viaje]
+from Viaje as v
+left join RutaM e on v.iIdViaje = e.iIdRuta
+where v.iIdViaje = e.iIdRuta
+group by e.iIdRuta)
+Select * from Viaje
+
+
+-- -----------------------------Consulta dinamica-----------------------
+declare @query nvarchar (MAX)
+set @query = 'select * from Chofer'
+exec (@query)
+
