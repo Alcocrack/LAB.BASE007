@@ -1,0 +1,110 @@
+use Senda
+
+----------------------PROCEDIMIENTO SCRIPT---------------------
+create procedure NuevoPasajero(
+	@idCliente int,
+	@vNombresP varchar(50),
+	@vApetPatP varchar(50),
+	@vApeMatP varchar(50),
+	@tEdadP int,
+	@iIdTipo int
+)
+as 
+begin
+	insert into Pasajero(iIdPasajero,vNombresP,vApePatP,vApeMatP,tEdadP, iIdTipoP)
+	values (@idCliente,@vNombresP ,	@vApetPatP ,@vApeMatP ,@tEdadP, @iIdTipo)
+end
+
+exec NuevoPasajero @idCliente=1, @vNombresP= 'Pedro' , @vApetPatP='Lopez', @vApeMatP='Viera', @tEdadP=42, @iIdTipo= 3
+
+drop procedure NuevoPasajero
+
+select * from Pasajero
+
+------------------ PROCEDIMIENTOS (5) --------------------
+---------------------------1 ---------------------------
+create procedure TipoEmpleado(
+	@iIdPuesto int
+)
+as 
+begin
+	select (e.vNomEmpleado + ' ' + e.vApePatEm+ ' ' +e.vApeMatEm) as NombreCompleto,
+		 d.vPuesto
+	 from Empleado as e
+	left join Puesto as d on d.iIdPuesto = e.Puesto
+	 where d.iIdPuesto = @iIdPuesto
+end
+exec TipoEmpleado @iIdPuesto= 1
+
+drop procedure TipoEmpleado
+
+-------------------------------- 2 ---------------------------
+create procedure CantidadEmpleados(
+	@iIdPuesto int
+)
+as 
+begin
+	select COUNT(e.iIdEmpleado) as 'Empleados', d.vPuesto
+	FROM Empleado as e
+	inner join Puesto as d on d.iIdPuesto = e.Puesto
+	where  d.iIdPuesto = @iIdPuesto
+	group by d.vPuesto
+end
+exec CantidadEmpleados @iIdPuesto=2
+
+drop procedure CantidadEmpleados
+
+--------------------------------------3 ---------------------------
+create procedure TipoDePago(
+	@iIdTPago int
+)
+as 
+begin
+	select COUNT(e.iIdVenta) as 'Ventas', d.vTipoP
+	FROM Venta as e
+	inner join TPago as d on d.iIdTPago = e.iIdTPago
+	where  d.iIdTPago = @iIdTPago
+	group by d.vTipoP
+end
+exec TipoDePago @iIdTPago= 1
+
+-------------------------------4 ---------------------------
+create procedure Tipo_Pasajero(
+	@iIdTipoP int
+)
+as 
+begin
+	select (e.vNombresP + ' ' + e.vApePatP+ ' ' +e.vApeMatP) as NombreCompleto,
+		 d.vTipoP
+	 from Pasajero as e
+	left join TipoPasajero as d on d.iIdTipoP = e.iIdTipoP
+	 where d.iIdTipoP = @iIdTipoP
+end
+exec Tipo_Pasajero @iIdTipoP= 1
+
+-------------------------------5 ---------------------------
+create procedure ContarTPasajero(
+	@idTipoP int
+)
+as 
+begin
+	select COUNT(e.iIdPasajero) as 'Pasajeros', d.vTipoP
+	FROM Pasajero as e
+	inner join TipoPasajero as d on d.iIdTipoP = e.iIdTipoP
+	where  d.iIdTipoP = @idTipoP
+	group by d.vTipoP
+end
+exec ContarTPasajero @idTipoP= 1
+
+
+------------------ Funcion--------------------
+create function TotalDeEmpleados(
+) returns int
+as begin
+	declare @totalE int = (select count(e.iIdEmpleado) as TotalE from Empleado as e)
+	return @totalE
+end
+
+select dbo.TotalDeEmpleados() as 'Total de empleados'
+
+drop function TotalDeEmpleados
