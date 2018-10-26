@@ -1,0 +1,41 @@
+use Senda
+
+---------------------Trigger Insert------------------
+create trigger dbo.tr_insertAutobus
+on dbo.Autobus
+instead of insert
+as
+begin
+	select *
+	from INSERTED
+END
+insert into Autobus(iIdAutobus,vMarca,iModelo,tCantPasajeros,vPlacas) values (15, 'Volvo', 2018, 50, 'DD-J32-634')
+
+
+---------------------Trigger Update------------------
+create trigger dbo.tr_updatePuesto
+on dbo.Empleado
+after update
+as
+begin
+	select *
+	from INSERTED
+	select*
+	from DELETED
+	--update
+END
+update Empleado set Puesto = 2
+from Empleado
+where iIdEmpleado = 3
+select * from Empleado
+
+---------------------Trigger Delete------------------
+create trigger dbo.tr_DeleteEmpleado
+on dbo.Empleado
+instead of delete
+as
+begin
+	select *
+	from DELETED
+END
+delete from Empleado where iIdEmpleado = 1
